@@ -18,8 +18,8 @@ async function queryGeminiAPI(prompt: string, language: string): Promise<string>
   try {
     const apiKey = process.env.GEMINI_API_KEY || 'fake_key';
     
-    // In a real implementation, this would be an actual API call
-    const response = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent", {
+    // API call to Gemini
+    const response = await fetch("https://generativelanguage.googleapis.com/v1/models/gemini-1.5-pro:generateContent", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
