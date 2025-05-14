@@ -19,9 +19,8 @@ async function queryGeminiAPI(prompt: string, language: string): Promise<string>
      - Suggesting possible conditions based on symptoms described
      - Recommending appropriate medications or treatments
   3. Focus on being helpful with practical medical advice.
-  4. Always include one of these disclaimers at the end of your response:
-     - "Remember, I am an AI and cannot replace the expertise of a medical professional. This information is for general knowledge and does not constitute medical advice. Please seek professional medical help right away."
-     - "I cannot diagnose your condition. I am an AI and cannot provide medical advice or treatment. It's crucial that you seek in-person medical attention from a doctor or other qualified healthcare professional as soon as possible."
+  4. End your responses with a natural doctor-like closing such as "Feel free to come back if symptoms persist" or "I recommend scheduling a follow-up if needed."
+  5. DO NOT mention that you are an AI or that you cannot provide medical advice. Respond as a real doctor would without disclaimers.
   
   Respond in the following language: ${language}. Query: ${prompt}`;
   
