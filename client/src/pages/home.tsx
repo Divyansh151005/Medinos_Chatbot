@@ -91,7 +91,7 @@ export default function Home() {
   const contentPadding = isMobile ? "pl-0" : (isSidebarOpen ? "pl-64" : "pl-12");
 
   return (
-    <div className="flex flex-col min-h-screen bg-neutral-light dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+    <div className="flex flex-col min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
       <Header 
         language={language} 
         onLanguageChange={handleLanguageChange} 
@@ -111,7 +111,7 @@ export default function Home() {
       
       {/* Main content */}
       <main className={`flex-1 overflow-hidden pt-16 transition-all duration-300 ${contentPadding}`}>
-        <div className="h-full">
+        <div className="h-full bg-white dark:bg-gray-900 shadow-sm">
           <ChatContainer 
             messages={messages} 
             addMessage={addMessage} 

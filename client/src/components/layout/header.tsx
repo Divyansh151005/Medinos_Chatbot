@@ -21,7 +21,7 @@ export default function Header({ language, onLanguageChange, onMenuClick, isSide
   };
 
   return (
-    <header className={`bg-primary-dark text-white py-3 px-4 shadow-md fixed top-0 w-full z-10`}>
+    <header className={`bg-primary-dark dark:bg-gray-900 text-white py-3 px-4 shadow-md fixed top-0 w-full z-10`}>
       <div className="flex justify-between items-center h-10">
         {/* Left section */}
         <div className="flex items-center">
@@ -30,14 +30,14 @@ export default function Header({ language, onLanguageChange, onMenuClick, isSide
               variant="ghost" 
               size="icon" 
               onClick={onMenuClick}
-              className="mr-2 text-white hover:bg-primary-light md:hidden"
+              className="mr-2 text-white hover:bg-primary-light dark:hover:bg-gray-700 md:hidden"
             >
               <Menu className="h-5 w-5" />
             </Button>
           )}
           <div className="flex items-center">
-            <span className="material-icons text-2xl mr-2">health_and_safety</span>
-            <h1 className="text-xl font-bold">MediChat</h1>
+            <span className="material-icons text-2xl mr-2 text-white">health_and_safety</span>
+            <h1 className="text-xl font-bold text-white">MediChat</h1>
           </div>
         </div>
         
@@ -45,13 +45,13 @@ export default function Header({ language, onLanguageChange, onMenuClick, isSide
         <div className="flex items-center space-x-2 sm:space-x-4">
           {/* Language Selector */}
           <Select value={language} onValueChange={onLanguageChange}>
-            <SelectTrigger className="w-[110px] h-9 bg-primary text-white border-primary-light focus:ring-2 focus:ring-white focus:ring-offset-0">
+            <SelectTrigger className="w-[110px] h-9 bg-primary dark:bg-gray-800 text-white border-primary-light dark:border-gray-700 focus:ring-2 focus:ring-white focus:ring-offset-0">
               <SelectValue placeholder="Language" />
             </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="en">English</SelectItem>
-              <SelectItem value="hi">हिंदी</SelectItem>
-              <SelectItem value="hinglish">Hinglish</SelectItem>
+            <SelectContent className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
+              <SelectItem value="en" className="text-gray-800 dark:text-gray-200">English</SelectItem>
+              <SelectItem value="hi" className="text-gray-800 dark:text-gray-200">हिंदी</SelectItem>
+              <SelectItem value="hinglish" className="text-gray-800 dark:text-gray-200">Hinglish</SelectItem>
             </SelectContent>
           </Select>
           
@@ -60,9 +60,9 @@ export default function Header({ language, onLanguageChange, onMenuClick, isSide
             onClick={toggleTheme} 
             variant="ghost" 
             size="icon"
-            className="h-9 w-9 bg-primary text-white rounded-full p-1 hover:bg-primary-light focus:outline-none focus:ring-2 focus:ring-white"
+            className="h-9 w-9 bg-primary dark:bg-gray-800 text-white rounded-full p-1 hover:bg-primary-light dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-white"
           >
-            {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+            {theme === "dark" ? <Sun className="h-5 w-5 text-yellow-300" /> : <Moon className="h-5 w-5" />}
           </Button>
         </div>
       </div>
