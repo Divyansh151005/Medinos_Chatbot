@@ -30,25 +30,25 @@ export default function ChatMessage({ message, isLoading = false }: ChatMessageP
   };
 
   return (
-    <div className={`flex ${isUser ? "justify-end" : "justify-start"}`}>
+    <div className={`flex ${isUser ? "justify-end" : "justify-start"} mb-4`}>
       <div 
         className={`
-          max-w-[80%] rounded-lg py-2 px-4 shadow-sm
+          max-w-[85%] rounded-lg py-3 px-4 shadow-sm
           ${isUser 
-            ? "bg-secondary-light text-primary-dark" 
-            : "bg-primary text-white"}
+            ? "bg-primary-light text-white dark:bg-primary" 
+            : "bg-white text-gray-800 dark:bg-gray-700 dark:text-white border border-gray-200 dark:border-gray-600"}
         `}
       >
-        {!isUser && <div className="font-medium mb-1">Dr. MediChat</div>}
+        {!isUser && <div className="font-medium mb-1 text-primary dark:text-gray-200">Dr. MediChat</div>}
         
         {isLoading ? (
-          <div className="typing-indicator">
-            <span></span>
-            <span></span>
-            <span></span>
+          <div className="flex space-x-2 justify-center items-center">
+            <div className="h-2 w-2 bg-gray-500 rounded-full animate-bounce"></div>
+            <div className="h-2 w-2 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+            <div className="h-2 w-2 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
           </div>
         ) : (
-          <div>{formatContent(message.content)}</div>
+          <div className="prose prose-sm max-w-none dark:prose-invert">{formatContent(message.content)}</div>
         )}
       </div>
     </div>

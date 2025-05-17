@@ -15,7 +15,7 @@ export default function Home() {
   const isMobile = useIsMobile();
 
   // Fetch messages for the active session
-  const { data: sessionMessages = [], isLoading } = useQuery({
+  const { data: sessionMessages, isLoading } = useQuery<Message[]>({
     queryKey: [`/api/messages/${activeSessionId}`],
     enabled: !!activeSessionId,
     refetchOnWindowFocus: false,
@@ -23,8 +23,9 @@ export default function Home() {
 
   // Update local messages when sessionMessages changes
   useEffect(() => {
-    if (sessionMessages.length > 0) {
-      setMessages(sessionMessages);
+    const messages = sessionMessages || [];
+    if (messages.length > 0) {
+      setMessages(messages);
     } else if (activeSessionId && !isLoading && messages.length === 0) {
       // If no messages were found, add a welcome message
       setMessages([

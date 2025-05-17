@@ -80,6 +80,7 @@ export default function ChatInput({ onSendMessage, sessionId, language }: ChatIn
       
       // Invalidate queries to refresh data
       queryClient.invalidateQueries({ queryKey: [`/api/messages/${sessionId}`] });
+      queryClient.invalidateQueries({ queryKey: ['/api/sessions'] });
     },
     onError: (error) => {
       toast({
@@ -94,7 +95,7 @@ export default function ChatInput({ onSendMessage, sessionId, language }: ChatIn
     e.preventDefault();
     
     const message = inputValue.trim();
-    if (!message) return;
+    if (!message || chatMutation.isPending) return;
     
     // Stop listening if active
     if (isListening) {
@@ -126,13 +127,13 @@ export default function ChatInput({ onSendMessage, sessionId, language }: ChatIn
   };
 
   return (
-    <div className="border-t border-gray-200 p-4 bg-neutral-light">
+    <div className="p-3 md:p-4 bg-white dark:bg-gray-800">
       <form onSubmit={handleSubmit} className="flex flex-col gap-3">
-        <div className="flex items-center gap-2">
+        <div className="relative flex items-center gap-2">
           <Button
             type="button"
             onClick={toggleVoiceInput}
-            className={`rounded-full ${isListening ? 'bg-red-500 hover:bg-red-600' : 'bg-primary hover:bg-primary-dark'}`}
+            className={`rounded-full ${isListening ? 'bg-red-500 hover:bg-red-600' : 'bg-primary hover:bg-primary-dark'} text-white`}
             size="icon"
           >
             {isListening ? <MicOff className="h-5 w-5" /> : <Mic className="h-5 w-5" />}
@@ -145,7 +146,7 @@ export default function ChatInput({ onSendMessage, sessionId, language }: ChatIn
               placeholder="Type your medical question..."
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
-              className="resize-none min-h-[50px] max-h-[150px] rounded-xl"
+              className="resize-none min-h-[50px] max-h-[150px] rounded-xl pr-12 dark:bg-gray-700 dark:text-white dark:border-gray-600"
               onKeyDown={(e) => {
                 if (e.key === 'Enter' && !e.shiftKey) {
                   e.preventDefault();
@@ -153,32 +154,36 @@ export default function ChatInput({ onSendMessage, sessionId, language }: ChatIn
                 }
               }}
             />
+            <Button 
+              type="submit" 
+              className="absolute right-2 bottom-2 rounded-full bg-primary hover:bg-primary-dark text-white"
+              size="icon"
+              disabled={chatMutation.isPending || !inputValue.trim()}
+            >
+              {chatMutation.isPending ? (
+                <div className="h-5 w-5 border-2 border-t-transparent border-white rounded-full animate-spin" />
+              ) : (
+                <Send className="h-5 w-5" />
+              )}
+            </Button>
+            
             {isListening && (
-              <div className="absolute inset-0 bg-white bg-opacity-90 rounded-xl flex items-center justify-center">
+              <div className="absolute inset-0 bg-white dark:bg-gray-700 bg-opacity-90 dark:bg-opacity-90 rounded-xl flex items-center justify-center">
                 <div className="flex items-center gap-2">
                   <div className="relative">
                     <div className="w-3 h-3 bg-primary rounded-full animate-ping absolute opacity-75"></div>
                     <div className="w-3 h-3 bg-primary rounded-full relative"></div>
                   </div>
-                  <span className="text-primary-dark">Listening...</span>
+                  <span className="text-primary-dark dark:text-white">Listening...</span>
                 </div>
               </div>
             )}
           </div>
-          
-          <Button 
-            type="submit" 
-            className="rounded-full bg-primary hover:bg-primary-dark"
-            size="icon"
-            disabled={chatMutation.isPending || !inputValue.trim()}
-          >
-            <Send className="h-5 w-5" />
-          </Button>
         </div>
         
         {/* Voice Output Controls */}
         <div className="flex items-center justify-between text-sm">
-          <div className="flex items-center gap-2 text-neutral-dark">
+          <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
             <Checkbox 
               id="voice-output" 
               checked={isVoiceEnabled}
@@ -187,7 +192,7 @@ export default function ChatInput({ onSendMessage, sessionId, language }: ChatIn
             <label htmlFor="voice-output" className="cursor-pointer">Voice response</label>
           </div>
           
-          <div className="flex items-center gap-2 text-neutral-dark">
+          <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
             {speaking && (
               <>
                 <Button 
@@ -210,7 +215,7 @@ export default function ChatInput({ onSendMessage, sessionId, language }: ChatIn
                 </Button>
               </>
             )}
-            <div className="text-xs text-neutral-dark italic">Powered by Gemini API</div>
+            <div className="text-xs italic">Powered by Gemini AI</div>
           </div>
         </div>
       </form>

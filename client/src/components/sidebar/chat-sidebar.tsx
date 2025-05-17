@@ -28,13 +28,13 @@ export default function ChatSidebar({
   const sidebarWidth = isMobile ? "w-full" : "w-64";
   
   // Fetch chat sessions
-  const { data: chatSessions = [], isLoading: isLoadingSessions } = useQuery({
+  const { data: chatSessions = [], isLoading: isLoadingSessions } = useQuery<ChatSession[]>({
     queryKey: ['/api/sessions'],
     refetchOnWindowFocus: false,
   });
   
   // Sort sessions by updatedAt date, most recent first
-  const sortedSessions = [...chatSessions].sort((a: ChatSession, b: ChatSession) => {
+  const sortedSessions = [...(Array.isArray(chatSessions) ? chatSessions : [])].sort((a: ChatSession, b: ChatSession) => {
     return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
   });
 
