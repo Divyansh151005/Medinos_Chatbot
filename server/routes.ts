@@ -67,6 +67,62 @@ async function queryGeminiAPI(prompt: string, language: string): Promise<string>
 }
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // API route to get all chat sessions
+  app.get("/api/sessions", async (req, res) => {
+    try {
+      const sessions = await storage.getChatSessions();
+      res.json(sessions);
+    } catch (error) {
+      console.error("Error fetching sessions:", error);
+      res.status(500).json({ message: "Failed to fetch chat sessions" });
+    }
+  });
+
+  // API route to create a new chat session
+  app.post("/api/sessions", async (req, res) => {
+    try {
+      const { sessionId, title, language } = req.body;
+      
+      if (!sessionId || !title || !language) {
+        return res.status(400).json({ message: "SessionId, title, and language are required" });
+      }
+      
+      const session = await storage.createChatSession({
+        sessionId,
+        title,
+        language
+      });
+      
+      res.json(session);
+    } catch (error) {
+      console.error("Error creating session:", error);
+      res.status(500).json({ message: "Failed to create chat session" });
+    }
+  });
+
+  // API route to update chat session title
+  app.patch("/api/sessions/:sessionId", async (req, res) => {
+    try {
+      const { sessionId } = req.params;
+      const { title } = req.body;
+      
+      if (!title) {
+        return res.status(400).json({ message: "Title is required" });
+      }
+      
+      const session = await storage.updateChatSessionTitle(sessionId, title);
+      
+      if (!session) {
+        return res.status(404).json({ message: "Session not found" });
+      }
+      
+      res.json(session);
+    } catch (error) {
+      console.error("Error updating session:", error);
+      res.status(500).json({ message: "Failed to update chat session" });
+    }
+  });
+
   // API route to get conversation history
   app.get("/api/messages/:sessionId", async (req, res) => {
     try {
@@ -85,6 +141,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Validate the request
       const validatedData = geminiRequestSchema.parse(req.body);
       const { prompt, language, sessionId } = validatedData;
+
+      // Check if session exists, if not, create a default one
+      const existingSession = await storage.getChatSessionById(sessionId);
+      
+      if (!existingSession) {
+        // Generate a title from the first prompt (truncated to 50 chars)
+        const title = prompt.length > 50 ? prompt.substring(0, 47) + "..." : prompt;
+        
+        await storage.createChatSession({
+          sessionId,
+          title,
+          language
+        });
+      }
 
       // Store user message
       const userMessage = await storage.createMessage({

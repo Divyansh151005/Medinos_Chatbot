@@ -16,6 +16,25 @@ export const insertUserSchema = createInsertSchema(users).pick({
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
 
+// Chat session schema
+export const chatSessions = pgTable("chat_sessions", {
+  id: serial("id").primaryKey(),
+  sessionId: text("session_id").notNull().unique(),
+  title: text("title").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  language: text("language").default("en").notNull(),
+});
+
+export const insertChatSessionSchema = createInsertSchema(chatSessions).pick({
+  sessionId: true,
+  title: true,
+  language: true,
+});
+
+export type InsertChatSession = z.infer<typeof insertChatSessionSchema>;
+export type ChatSession = typeof chatSessions.$inferSelect;
+
 // Message schema for chat messages
 export const messages = pgTable("messages", {
   id: serial("id").primaryKey(),
